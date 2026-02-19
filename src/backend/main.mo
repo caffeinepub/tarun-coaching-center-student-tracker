@@ -1,25 +1,46 @@
 import Map "mo:core/Map";
 import List "mo:core/List";
 import Runtime "mo:core/Runtime";
-import Order "mo:core/Order";
 import Array "mo:core/Array";
 import Iter "mo:core/Iter";
 import Text "mo:core/Text";
 import Principal "mo:core/Principal";
 import Nat "mo:core/Nat";
+import Time "mo:core/Time";
+import Order "mo:core/Order";
+import Migration "migration";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import Migration "migration";
 
 (with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
+  // User Authentication Types and State
+  public type UserRole = {
+    #admin;
+    #staff;
+    #student;
+  };
+
+  public type User = {
+    username : Text;
+    passwordHash : Text;
+    role : UserRole;
+    name : Text;
+    principal : ?Principal;
+  };
+
+  let users = Map.empty<Text, User>();
+  let principalToUsername = Map.empty<Principal, Text>();
+  let sessionTokens = Map.empty<Text, Principal>();
+  var nextTokenId = 0;
+
   // User Profile Type
   public type UserProfile = {
     name : Text;
-    role : Text; // e.g., "Teacher", "Administrator", "Staff"
+    role : Text;
   };
 
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -107,8 +128,16 @@ actor {
   let marks = List.empty<Mark>();
   let attendance = List.empty<AttendanceRecord>();
 
-  // New subject management state
   let subjects = Map.empty<Text, Bool>();
+
+  // Helper function to map UserRole to AccessControl.UserRole
+  func mapToAccessControlRole(role : UserRole) : AccessControl.UserRole {
+    switch (role) {
+      case (#admin) { #admin };
+      case (#staff) { #user };
+      case (#student) { #user };
+    };
+  };
 
   // Admin-only: Add student
   public shared ({ caller }) func addStudent(name : Text, rollNumber : Text, grade : Text, contact : Text) : async Nat {
@@ -227,4 +256,97 @@ actor {
     };
     attendance.values().toArray().filter(func(record) { record.date == date }).sort();
   };
+
+  // Authentication and Authorization
+  // Register user - admin required for creating admin accounts, otherwise open
+  public shared ({ caller }) func registerUser(username : Text, plainPassword : Text, role : UserRole, name : Text) : async () {
+    // Only admins can create admin accounts
+    if (role == #admin and not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can create admin accounts");
+    };
+
+    if (users.containsKey(username)) {
+      Runtime.trap("Username already exists");
+    };
+
+    let newUser : User = {
+      username;
+      passwordHash = plainPassword;
+      role;
+      name;
+      principal = ?caller;
+    };
+    users.add(username, newUser);
+    principalToUsername.add(caller, username);
+
+    // Assign role in AccessControl system
+    let accessControlRole = mapToAccessControlRole(role);
+    AccessControl.assignRole(accessControlState, caller, caller, accessControlRole);
+
+    // Create user profile
+    let roleText = switch (role) {
+      case (#admin) { "admin" };
+      case (#staff) { "staff" };
+      case (#student) { "student" };
+    };
+    let profile : UserProfile = {
+      name;
+      role = roleText;
+    };
+    userProfiles.add(caller, profile);
+  };
+
+  // Authenticate user and generate session token - available to all (including guests)
+  public shared ({ caller }) func authenticate(username : Text, plainPassword : Text) : async Text {
+    switch (users.get(username)) {
+      case (null) { Runtime.trap("Invalid username or password") };
+      case (?user) {
+        if (user.passwordHash != plainPassword) {
+          Runtime.trap("Invalid username or password");
+        };
+
+        // Generate session token
+        let token = "token_" # nextTokenId.toText() # "_" # Int.toText(Time.now());
+        sessionTokens.add(token, caller);
+        nextTokenId += 1;
+
+        token;
+      };
+    };
+  };
+
+  // Verify session token - available to all
+  public query func verifyToken(token : Text) : async ?Principal {
+    sessionTokens.get(token);
+  };
+
+  // Get user info by token - available to all
+  public query func getUserByToken(token : Text) : async ?{ username : Text; role : UserRole; name : Text } {
+    switch (sessionTokens.get(token)) {
+      case (null) { null };
+      case (?principal) {
+        switch (principalToUsername.get(principal)) {
+          case (null) { null };
+          case (?username) {
+            switch (users.get(username)) {
+              case (null) { null };
+              case (?user) {
+                ?{
+                  username = user.username;
+                  role = user.role;
+                  name = user.name;
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+
+  // Logout - revoke session token - available to all
+  public shared func logout(token : Text) : async () {
+    sessionTokens.remove(token);
+  };
 };
+

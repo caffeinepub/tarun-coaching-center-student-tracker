@@ -1,13 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
+  "projectStateVersion": 13,
   "summary": "Student marks and attendance tracking application for Tarun Coaching Center",
   "architectural_notes": [
     "Application designed for Tarun Coaching Center",
     "Core functionality: marks and attendance tracking",
     "Admin-only access controls for marks and attendance updates",
     "Daily update capability for marks and attendance records",
-    "Test subject management system for organizing marks by subject"
+    "Test subject management system for organizing marks by subject",
+    "Authentication system switched from Google/Internet Identity to admin-controlled username/password system",
+    "Only admins can create accounts for students and staff",
+    "Credentials stored securely with password hashing in Motoko backend"
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -73,6 +76,78 @@
       "title": "Implement role-based UI rendering that shows or hides admin-only features (marks updates, test subject management, attendance updates) based on the authenticated user's role from their profile",
       "reqIds": [
         "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-loginpage-component-to-use-a-dark-color-scheme-with-dark-backgrounds-light-text-for-headings-and-body-copy-and-properly-contrasted-form-elements-that-maintain-readability-and-accessibility",
+      "title": "Update the LoginPage component to use a dark color scheme with dark backgrounds, light text for headings and body copy, and properly contrasted form elements that maintain readability and accessibility",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-loginpage-component-to-display-two-visually-distinct-options-log-in-button-for-existing-users-and-create-account-button-for-new-users-both-triggering-the-same-internet-identity-authentication-flow-but-with-different-button-labels-and-visual-separation-to-guide-user-understanding",
+      "title": "Update the LoginPage component to display two visually distinct options: 'Log In' button for existing users and 'Create Account' button for new users, both triggering the same Internet Identity authentication flow but with different button labels and visual separation to guide user understanding",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-explanatory-text-or-helper-messages-near-each-button-to-clarify-that-log-in-is-for-returning-users-with-existing-internet-identity-accounts-and-create-account-guides-new-users-through-internet-identity-setup",
+      "title": "Add explanatory text or helper messages near each button to clarify that 'Log In' is for returning users with existing Internet Identity accounts, and 'Create Account' guides new users through Internet Identity setup",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-loginpage-component-to-display-only-a-single-sign-in-with-google-button-removing-the-separate-log-in-and-create-account-buttons-while-maintaining-the-dark-mode-styling",
+      "title": "Update the LoginPage component to display only a single 'Sign in with Google' button, removing the separate 'Log In' and 'Create Account' buttons while maintaining the dark mode styling",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-internet-identity-and-google-authentication-dependencies-from-the-frontend-including-the-useinternetidentity-hook-authclient-usage-and-internet-identity-provider-wrapper",
+      "title": "Remove all Internet Identity and Google authentication dependencies from the frontend, including the useInternetIdentity hook, AuthClient usage, and Internet Identity provider wrapper",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-traditional-username-password-login-form-on-the-loginpage-component-replacing-the-sign-in-with-google-button-with-fields-for-username-id-and-password-maintaining-the-dark-mode-styling",
+      "title": "Implement a traditional username/password login form on the LoginPage component replacing the 'Sign in with Google' button, with fields for username/ID and password, maintaining the dark mode styling",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-only-account-creation-interface-accessible-from-the-layout-navigation-menu-with-form-fields-for-username-id-password-role-selection-admin-teacher-staff-student-and-name",
+      "title": "Create an admin-only account creation interface accessible from the Layout navigation menu, with form fields for username/ID, password, role selection (Admin/Teacher/Staff/Student), and name",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-useauth-hook-to-manage-username-password-authentication-state-instead-of-internet-identity-including-login-logout-and-session-persistence-functionality",
+      "title": "Update the useAuth hook to manage username/password authentication state instead of Internet Identity, including login, logout, and session persistence functionality",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-profilesetupmodal-component-since-user-profiles-will-be-created-by-admins-during-account-creation-with-all-necessary-information",
+      "title": "Remove the ProfileSetupModal component since user profiles will be created by admins during account creation with all necessary information",
+      "reqIds": [
+        "REQ-25"
       ],
       "version": 1
     }
@@ -157,6 +232,68 @@
       "summary": "Create backend functionality to manage test subjects including adding new subjects, editing subject names, and retrieving all available subjects",
       "reqIds": [
         "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Convert login page to dark mode with dark backgrounds, light text, and contrasted form elements",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Replace Google/Internet Identity authentication with username/password login system",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Create admin panel interface for creating student and staff accounts with username/ID and password",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Implement secure backend credential storage with password hashing in Motoko",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Implement role assignment system for admin-created accounts (student/staff/admin roles)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Create backend Motoko functions to securely store user credentials with password hashing, supporting user creation with username, hashed password, role (admin/staff/student), and name fields",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Implement backend authentication function that verifies username and password credentials, returns a session token or user identity on success, and supports role-based access control",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Update the useActor hook to initialize the backend actor with session-based authentication instead of Internet Identity principal",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Update backend migration.mo to preserve existing user profile data during the transition from Internet Identity to username/password authentication system",
+      "reqIds": [
+        "REQ-26"
       ],
       "status": "pending"
     }

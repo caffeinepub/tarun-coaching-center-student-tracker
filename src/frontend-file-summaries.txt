@@ -1,9 +1,9 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup including new /subjects route, authentication flow, profile setup modal integration, and route definitions for all pages.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including user profile, admin role checking, student management, subject management (add/edit/get), marks tracking, and attendance recording with proper error handling and cache invalidation.",
-  "frontend/src/components/Layout.tsx": "Main layout wrapper with responsive header navigation including conditional Subjects menu item for admins, admin badge display in user profile section, and mobile menu support.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup including protected routes, authentication checks via RootComponent wrapper, and routes for login, home, students, marks, attendance, subjects, and account creation pages.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations with useGetMarksByStudent and useGetAttendanceByStudent converted to queries that accept studentId parameters and automatically fetch data when enabled.",
+  "frontend/src/components/Layout.tsx": "Main layout wrapper with responsive header navigation including new Accounts menu item for admins and session-based logout functionality.",
   "frontend/src/components/ProfileSetupModal.tsx": "Modal dialog for first-time user profile setup that prompts authenticated users to enter their name and role before accessing the application.",
-  "frontend/src/pages/LoginPage.tsx": "Dedicated login page with Internet Identity authentication, displaying the coaching center logo and branding with secure login flow.",
+  "frontend/src/pages/LoginPage.tsx": "Login page with traditional username/password form including password visibility toggle and form validation.",
   "frontend/src/pages/HomePage.tsx": "Landing page with hero banner, welcome message, feature cards for navigation to students/marks/attendance sections, and quick stats overview.",
   "frontend/src/pages/StudentsPage.tsx": "Student management page with role-based rendering showing add student button only to admin users while maintaining read-only view for non-admin users.",
   "frontend/src/components/StudentForm.tsx": "Reusable form component for adding new students with fields for name, roll number, grade, and contact information with validation.",
@@ -15,8 +15,11 @@
   "frontend/src/components/AttendanceHistory.tsx": "Display component showing attendance records with statistics (percentage, present/absent counts) and chronological list with visual indicators.",
   "frontend/src/index.css": "Global styles with education-focused OKLCH color system featuring warm blues, greens, and orange accents for both light and dark modes.",
   "frontend/tailwind.config.js": "Tailwind configuration with custom education theme colors, Poppins/Inter font families, extended shadows, and professional academic styling.",
-  "frontend/src/hooks/useAuth.ts": "Custom authentication hook that combines Internet Identity and admin role checking to provide unified auth state (isAuthenticated, isAdmin, userProfile) for role-based UI rendering throughout the application.",
+  "frontend/src/hooks/useAuth.ts": "Custom authentication hook managing username/password login with session tokens stored in localStorage, providing isAuthenticated, isAdmin, login, and logout methods.",
   "frontend/src/components/AdminGuard.tsx": "Wrapper component that checks admin permissions and displays appropriate access denied messages or redirects for non-admin users attempting to access restricted content.",
   "frontend/src/components/SubjectManagement.tsx": "Admin-only component for managing test subjects with add new subject form, list of existing subjects with inline edit functionality, and proper loading/empty states.",
-  "frontend/src/pages/SubjectsPage.tsx": "Page component for subject management that renders SubjectManagement component with authentication check and page header."
+  "frontend/src/pages/SubjectsPage.tsx": "Page component for subject management that renders SubjectManagement component with authentication check and page header.",
+  "frontend/src/main.tsx": "Application entry point with QueryClientProvider, removing InternetIdentityProvider wrapper for session-based authentication.",
+  "frontend/src/hooks/useActor.ts": "Backend actor initialization hook creating anonymous actor for authentication without Internet Identity dependencies.",
+  "frontend/src/pages/AccountCreationPage.tsx": "Admin-only page for creating new user accounts with username, password, name, and role selection (Admin/Staff/Student)."
 }

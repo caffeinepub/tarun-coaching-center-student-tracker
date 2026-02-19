@@ -30,6 +30,9 @@ export interface Student {
 }
 export interface UserProfile { 'name' : string, 'role' : string }
 export type UserRole = { 'admin' : null } |
+  { 'staff' : null } |
+  { 'student' : null };
+export type UserRole__1 = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
 export interface _SERVICE {
@@ -37,19 +40,27 @@ export interface _SERVICE {
   'addMark' : ActorMethod<[bigint, string, string, bigint], undefined>,
   'addStudent' : ActorMethod<[string, string, string, string], bigint>,
   'addSubject' : ActorMethod<[string], undefined>,
-  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole__1], undefined>,
+  'authenticate' : ActorMethod<[string, string], string>,
   'editSubject' : ActorMethod<[string, string], undefined>,
   'getAllSubjects' : ActorMethod<[], Array<string>>,
   'getAttendanceByDate' : ActorMethod<[string], Array<AttendanceRecord>>,
   'getAttendanceByStudent' : ActorMethod<[bigint], Array<AttendanceRecord>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
-  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getCallerUserRole' : ActorMethod<[], UserRole__1>,
   'getMarksByStudent' : ActorMethod<[bigint], Array<Mark>>,
   'getStudent' : ActorMethod<[bigint], Student>,
+  'getUserByToken' : ActorMethod<
+    [string],
+    [] | [{ 'username' : string, 'name' : string, 'role' : UserRole }]
+  >,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'logout' : ActorMethod<[string], undefined>,
   'recordAttendance' : ActorMethod<[bigint, string, boolean], undefined>,
+  'registerUser' : ActorMethod<[string, string, UserRole, string], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'verifyToken' : ActorMethod<[string], [] | [Principal]>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

@@ -1,18 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
+import { useAuth } from './useAuth';
 import type { Student, Mark, AttendanceRecord, UserProfile } from '../backend';
 import { toast } from 'sonner';
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
+  const { token } = useAuth();
 
   const query = useQuery<UserProfile | null>({
-    queryKey: ['currentUserProfile'],
+    queryKey: ['currentUserProfile', token],
     queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor || !token) return null;
       return actor.getCallerUserProfile();
     },
-    enabled: !!actor && !actorFetching,
+    enabled: !!actor && !actorFetching && !!token,
     retry: false,
   });
 
@@ -44,20 +46,21 @@ export function useSaveCallerUserProfile() {
 
 export function useIsCallerAdmin() {
   const { actor, isFetching: actorFetching } = useActor();
+  const { token } = useAuth();
 
   return useQuery<boolean>({
-    queryKey: ['isAdmin'],
+    queryKey: ['isAdmin', token],
     queryFn: async () => {
-      if (!actor) return false;
+      if (!actor || !token) return false;
       return actor.isCallerAdmin();
     },
-    enabled: !!actor && !actorFetching,
+    enabled: !!actor && !actorFetching && !!token,
     retry: false,
   });
 }
 
 export function useGetStudent() {
-  const { actor, isFetching } = useActor();
+  const { actor } = useActor();
 
   return useMutation({
     mutationFn: async (id: bigint) => {
@@ -88,14 +91,15 @@ export function useAddStudent() {
 
 export function useGetAllSubjects() {
   const { actor, isFetching } = useActor();
+  const { token } = useAuth();
 
   return useQuery<string[]>({
-    queryKey: ['subjects'],
+    queryKey: ['subjects', token],
     queryFn: async () => {
       if (!actor) return [];
       return actor.getAllSubjects();
     },
-    enabled: !!actor && !isFetching,
+    enabled: !!actor && !isFetching && !!token,
   });
 }
 
@@ -158,15 +162,16 @@ export function useAddMark() {
 }
 
 export function useGetMarksByStudent(studentId: bigint | null) {
-  const { actor, isFetching } = useActor();
+  const { actor, isFetching: actorFetching } = useActor();
+  const { token } = useAuth();
 
   return useQuery<Mark[]>({
-    queryKey: ['marks', studentId?.toString()],
+    queryKey: ['marks', studentId?.toString(), token],
     queryFn: async () => {
       if (!actor || !studentId) return [];
       return actor.getMarksByStudent(studentId);
     },
-    enabled: !!actor && !isFetching && studentId !== null,
+    enabled: !!actor && !actorFetching && !!studentId && !!token,
   });
 }
 
@@ -190,27 +195,26 @@ export function useRecordAttendance() {
 }
 
 export function useGetAttendanceByStudent(studentId: bigint | null) {
-  const { actor, isFetching } = useActor();
+  const { actor, isFetching: actorFetching } = useActor();
+  const { token } = useAuth();
 
   return useQuery<AttendanceRecord[]>({
-    queryKey: ['attendance', 'student', studentId?.toString()],
+    queryKey: ['attendance', studentId?.toString(), token],
     queryFn: async () => {
       if (!actor || !studentId) return [];
       return actor.getAttendanceByStudent(studentId);
     },
-    enabled: !!actor && !isFetching && studentId !== null,
+    enabled: !!actor && !actorFetching && !!studentId && !!token,
   });
 }
 
-export function useGetAttendanceByDate(date: string | null) {
-  const { actor, isFetching } = useActor();
+export function useGetAttendanceByDate() {
+  const { actor } = useActor();
 
-  return useQuery<AttendanceRecord[]>({
-    queryKey: ['attendance', 'date', date],
-    queryFn: async () => {
-      if (!actor || !date) return [];
+  return useMutation({
+    mutationFn: async (date: string) => {
+      if (!actor) throw new Error('Actor not available');
       return actor.getAttendanceByDate(date);
     },
-    enabled: !!actor && !isFetching && date !== null,
   });
 }

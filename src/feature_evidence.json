@@ -2,12 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-enhance-the-marks-recording-interface-to-support-daily-updates-by-admin-users-allowing-selection-from-managed-test-subjects-and-updating-existing-mark-entries",
-      "featureTitle": "Enhance the marks recording interface to support daily updates by admin users, allowing selection from managed test subjects and updating existing mark entries",
+      "featureId": "feature-remove-all-internet-identity-and-google-authentication-dependencies-from-the-frontend-including-the-useinternetidentity-hook-authclient-usage-and-internet-identity-provider-wrapper",
+      "featureTitle": "Remove all Internet Identity and Google authentication dependencies from the frontend, including the useInternetIdentity hook, AuthClient usage, and Internet Identity provider wrapper",
       "files": [
-        "frontend/src/components/MarkForm.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/MarksPage.tsx"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,19 +16,36 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-10"
+        "REQ-18"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-an-admin-interface-for-test-subject-management-allowing-admins-to-add-new-subjects-and-edit-existing-subject-names",
-      "featureTitle": "Create an admin interface for test subject management allowing admins to add new subjects and edit existing subject names",
+      "featureId": "feature-implement-a-traditional-username-password-login-form-on-the-loginpage-component-replacing-the-sign-in-with-google-button-with-fields-for-username-id-and-password-maintaining-the-dark-mode-styling",
+      "featureTitle": "Implement a traditional username/password login form on the LoginPage component replacing the 'Sign in with Google' button, with fields for username/ID and password, maintaining the dark mode styling",
+      "files": [
+        "frontend/src/pages/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-19"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-an-admin-only-account-creation-interface-accessible-from-the-layout-navigation-menu-with-form-fields-for-username-id-password-role-selection-admin-teacher-staff-student-and-name",
+      "featureTitle": "Create an admin-only account creation interface accessible from the Layout navigation menu, with form fields for username/ID, password, role selection (Admin/Teacher/Staff/Student), and name",
       "files": [
         "frontend/src/App.tsx",
         "frontend/src/components/Layout.tsx",
-        "frontend/src/components/SubjectManagement.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/SubjectsPage.tsx"
+        "frontend/src/pages/AccountCreationPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -41,39 +56,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-11"
+        "REQ-22"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-enhance-the-attendance-interface-to-support-daily-updates-by-admin-users-allowing-them-to-mark-or-update-attendance-for-multiple-students-efficiently",
-      "featureTitle": "Enhance the attendance interface to support daily updates by admin users, allowing them to mark or update attendance for multiple students efficiently",
+      "featureId": "feature-update-the-useauth-hook-to-manage-username-password-authentication-state-instead-of-internet-identity-including-login-logout-and-session-persistence-functionality",
+      "featureTitle": "Update the useAuth hook to manage username/password authentication state instead of Internet Identity, including login, logout, and session persistence functionality",
       "files": [
-        "frontend/src/components/AttendanceForm.tsx",
-        "frontend/src/pages/AttendancePage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-12"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-role-based-ui-rendering-that-shows-or-hides-admin-only-features-marks-updates-test-subject-management-attendance-updates-based-on-the-authenticated-user-s-role-from-their-profile",
-      "featureTitle": "Implement role-based UI rendering that shows or hides admin-only features (marks updates, test subject management, attendance updates) based on the authenticated user's role from their profile",
-      "files": [
-        "frontend/src/components/AdminGuard.tsx",
-        "frontend/src/components/Layout.tsx",
         "frontend/src/hooks/useAuth.ts",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/StudentsPage.tsx"
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -84,7 +76,27 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-13"
+        "REQ-23"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-the-profilesetupmodal-component-since-user-profiles-will-be-created-by-admins-during-account-creation-with-all-necessary-information",
+      "featureTitle": "Remove the ProfileSetupModal component since user profiles will be created by admins during account creation with all necessary information",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ProfileSetupModal.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-25"
       ],
       "confidence": "high"
     }

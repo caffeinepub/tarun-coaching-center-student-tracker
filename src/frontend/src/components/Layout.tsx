@@ -1,24 +1,25 @@
 import { Link, useLocation } from '@tanstack/react-router';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useAuth } from '../hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Users, ClipboardList, Calendar, LogOut, Menu, X, BookMarked } from 'lucide-react';
+import { BookOpen, Users, ClipboardList, Calendar, LogOut, Menu, X, BookMarked, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { identity, clear, isLoggingIn } = useInternetIdentity();
-  const { isAdmin, userProfile } = useAuth();
+  const { isAuthenticated, isAdmin, userProfile, logout } = useAuth();
   const queryClient = useQueryClient();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const isAuthenticated = !!identity;
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    await clear();
-    queryClient.clear();
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const navItems = [
@@ -27,6 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { path: '/marks', label: 'Marks', icon: ClipboardList, adminOnly: false },
     { path: '/attendance', label: 'Attendance', icon: Calendar, adminOnly: false },
     { path: '/subjects', label: 'Subjects', icon: BookMarked, adminOnly: true },
+    { path: '/accounts', label: 'Accounts', icon: UserPlus, adminOnly: true },
   ];
 
   const visibleNavItems = navItems.filter((item) => !item.adminOnly || isAdmin);
@@ -91,9 +93,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <p className="text-xs text-gray-600 dark:text-gray-400">{userProfile.role}</p>
                 </div>
               )}
-              <Button onClick={handleLogout} disabled={isLoggingIn} variant="outline" size="sm" className="gap-2">
+              <Button onClick={handleLogout} disabled={isLoggingOut} variant="outline" size="sm" className="gap-2">
                 <LogOut className="w-4 h-4" />
-                Logout
+                {isLoggingOut ? 'Logging out...' : 'Logout'}
               </Button>
             </div>
 
@@ -141,9 +143,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <p className="text-xs text-gray-600 dark:text-gray-400">{userProfile.role}</p>
                 </div>
               )}
-              <Button onClick={handleLogout} disabled={isLoggingIn} variant="outline" size="sm" className="w-full gap-2">
+              <Button onClick={handleLogout} disabled={isLoggingOut} variant="outline" size="sm" className="w-full gap-2">
                 <LogOut className="w-4 h-4" />
-                Logout
+                {isLoggingOut ? 'Logging out...' : 'Logout'}
               </Button>
             </div>
           )}

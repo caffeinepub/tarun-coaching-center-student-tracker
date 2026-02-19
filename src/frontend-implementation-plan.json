@@ -1,133 +1,144 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add admin-only daily updates for marks, test subjects, and attendance",
+  "title": "Replace Google authentication with admin-controlled username/password system",
   "requirements": [
     {
-      "id": "REQ-10",
-      "summary": "Enhance the marks recording interface to support daily updates by admin users with test subject selection and update capability",
+      "id": "REQ-18",
+      "summary": "Remove all Internet Identity and Google authentication dependencies from the frontend",
       "acceptanceCriteria": [
-        "Admin users see a dropdown to select from available test subjects when recording marks",
-        "Admin users can update existing mark entries for a student-subject-exam combination",
-        "The interface displays the current date by default for daily updates",
-        "Non-admin users cannot access mark update functionality",
-        "Success and error messages provide clear feedback for mark operations"
+        "Internet Identity provider is removed from main.tsx",
+        "useInternetIdentity hook is no longer used in any components",
+        "AuthClient dependencies are removed from the codebase",
+        "No references to Internet Identity remain in authentication flow"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/main.tsx",
           "operation": "modify",
-          "description": "Add useGetAllSubjects query hook to fetch the list of available test subjects from the backend using getAllSubjects() method. Add useEditMark mutation hook (if backend supports updating marks) or document that addMark() is used for both create and update operations."
-        },
-        {
-          "path": "frontend/src/components/MarkForm.tsx",
-          "operation": "modify",
-          "description": "Replace the manual subject text input with a dropdown/select component populated from useGetAllSubjects hook. Add admin role check using useGetCallerUserRole hook to conditionally render the form. Set the date field to default to today's date for daily updates. Update form validation to work with subject selection. Add clear success/error feedback messages using toast notifications."
-        },
-        {
-          "path": "frontend/src/pages/MarksPage.tsx",
-          "operation": "modify",
-          "description": "Add role-based conditional rendering using useGetCallerUserRole hook to show the MarkForm only to admin users. Display an appropriate message for non-admin users indicating they cannot update marks. Ensure the page gracefully handles loading states while checking user role."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Create an admin interface for test subject management allowing admins to add and edit subjects",
-      "acceptanceCriteria": [
-        "Admin users can access a test subjects management section",
-        "Interface displays a list of all existing test subjects",
-        "Admin users can add new test subjects with validation",
-        "Admin users can edit existing test subject names",
-        "Non-admin users cannot access this interface",
-        "Changes reflect immediately in the marks recording dropdown"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useAddSubject mutation hook that calls the backend addSubject() method with proper cache invalidation for the subjects list query. Add useEditSubject mutation hook that calls the backend editSubject() method with cache invalidation. Include toast notifications for success and error states."
-        },
-        {
-          "path": "frontend/src/components/SubjectManagement.tsx",
-          "operation": "create",
-          "description": "Create a new component that displays a list of all test subjects using useGetAllSubjects hook. Include a form to add new subjects with input validation. Add inline edit functionality for existing subjects with edit/save/cancel buttons. Implement admin-only access check using useGetCallerUserRole hook at the component level. Show loading states and empty states appropriately."
-        },
-        {
-          "path": "frontend/src/pages/SubjectsPage.tsx",
-          "operation": "create",
-          "description": "Create a new page component that renders the SubjectManagement component. Add role-based access control to redirect non-admin users or show an access denied message. Include page title and description explaining the subject management functionality."
+          "description": "Remove InternetIdentityProvider wrapper from the app root, leaving only QueryClientProvider and RouterProvider"
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Import SubjectsPage and add a new route for '/subjects' in the router configuration. Ensure the route is properly configured with the Route component from TanStack Router."
+          "description": "Remove all references to useInternetIdentity hook and Internet Identity authentication flows"
+        },
+        {
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
+          "operation": "delete",
+          "description": "Delete the useInternetIdentity hook as it is no longer needed for username/password authentication"
+        }
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "summary": "Implement traditional username/password login form on LoginPage replacing Google sign-in",
+      "acceptanceCriteria": [
+        "LoginPage displays username/ID input field",
+        "LoginPage displays password input field with obscured text",
+        "Submit button is present and functional",
+        "Dark mode styling is maintained consistent with current design",
+        "Form validation prevents empty submissions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Replace the 'Sign in with Google' button with a traditional login form containing username/ID input, password input with type='password', and submit button. Maintain the dark mode styling with the existing layout structure. Add form validation to prevent empty submissions. Call the useAuth hook's login method with username and password on form submission."
+        }
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "summary": "Create admin-only account creation interface with navigation menu integration",
+      "acceptanceCriteria": [
+        "New navigation menu item visible only to admins",
+        "Account creation page includes username/ID input field",
+        "Password input field is present with visibility toggle",
+        "Role dropdown includes Admin, Teacher, Staff, and Student options",
+        "Name input field is included",
+        "Form submission calls backend createUser function",
+        "Success message displays after account creation",
+        "Form validation prevents duplicate usernames"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AccountCreationPage.tsx",
+          "operation": "create",
+          "description": "Create a new page component for admin-only account creation with form fields for username/ID (text input), password (with visibility toggle button), role selection (dropdown with options: Admin, Teacher, Staff, Student matching backend UserRole enum), and name (text input). Include form validation to prevent empty fields and duplicate usernames. Call the backend registerUser function on form submission and display success/error messages using toast notifications. Wrap the component with AdminGuard to restrict access."
         },
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Add a 'Subjects' navigation menu item that links to the /subjects route. Use role-based conditional rendering with useGetCallerUserRole hook to show this menu item only to admin users. Position the menu item appropriately in the navigation between existing items."
-        }
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "summary": "Enhance the attendance interface to support daily updates by admin users with efficient multi-student marking",
-      "acceptanceCriteria": [
-        "Admin users can mark attendance for the current date",
-        "Admin users can update previously recorded attendance entries",
-        "The interface defaults to today's date for daily attendance marking",
-        "Non-admin users cannot access attendance update functionality",
-        "Attendance updates provide immediate visual feedback and confirmation"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AttendanceForm.tsx",
-          "operation": "modify",
-          "description": "Set the date input to default to today's date (new Date().toISOString().split('T')[0]). Add admin role check using useGetCallerUserRole hook to conditionally render the form or disable it for non-admin users. Enhance success feedback with toast notifications. Add a note that the backend recordAttendance() method handles both new records and updates."
+          "description": "Add a new navigation menu item 'Account Creation' or 'Manage Accounts' that links to /accounts route. Display this menu item only when the user has admin role using the isAdmin flag from useAuth hook. Place it in the navigation menu after the Subjects link."
         },
         {
-          "path": "frontend/src/pages/AttendancePage.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add role-based conditional rendering using useGetCallerUserRole hook to show the AttendanceForm only to admin users. Display an appropriate message for non-admin users indicating they cannot update attendance. Ensure the page gracefully handles loading states while checking user role."
+          "description": "Register the new /accounts route in the router configuration, importing and rendering the AccountCreationPage component. Ensure the route is protected and only accessible to authenticated admin users."
         }
       ]
     },
     {
-      "id": "REQ-13",
-      "summary": "Implement role-based UI rendering that shows or hides admin-only features based on authenticated user's role",
+      "id": "REQ-23",
+      "summary": "Update useAuth hook to manage username/password authentication state",
       "acceptanceCriteria": [
-        "Admin users see all management features including update capabilities",
-        "Non-admin users (Teacher, Staff) see read-only views without update controls",
-        "Role checks use the user profile role field already stored in the backend",
-        "Navigation and page layouts adapt based on user role",
-        "Unauthorized access attempts to admin routes redirect to appropriate pages"
+        "useAuth hook no longer depends on Internet Identity",
+        "Hook provides login function accepting username and password",
+        "Hook provides logout function that clears authentication state",
+        "Authentication state persists in browser storage",
+        "Hook returns current user profile and role information",
+        "isAuthenticated and isAdmin flags are correctly computed"
       ],
       "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "modify",
+          "description": "Rewrite the useAuth hook to remove Internet Identity dependencies. Implement login function that accepts username and password parameters, calls the backend authenticate function to obtain a session token, and stores the token in sessionStorage or localStorage. Implement logout function that calls backend logout with the token and clears all stored authentication state. Fetch user profile using the backend getUserByToken function with the stored token. Return isAuthenticated (based on token presence and validity), isAdmin (based on user role being 'admin'), user profile, login, and logout methods. Handle token persistence across page refreshes by checking stored token on hook initialization."
+        },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add useGetCallerUserRole query hook that calls the backend isCallerAdmin() method to determine if the current user has admin privileges. Configure the query with appropriate caching and refetch behavior. This hook will be used throughout the application for role-based UI rendering."
-        },
+          "description": "Update query hooks that depend on authentication to use the session token from useAuth instead of Internet Identity principal. Ensure getCallerUserProfile and related queries work with the new authentication mechanism. Update mutation handlers to include the session token in backend calls where required."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Update useActor hook to initialize backend actor with session-based authentication",
+      "acceptanceCriteria": [
+        "useActor no longer depends on Internet Identity",
+        "Actor initialization uses session token or authentication state",
+        "Backend calls include authentication credentials",
+        "Actor invalidates queries on authentication state changes"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/hooks/useAuth.ts",
-          "operation": "create",
-          "description": "Create a custom hook that combines useInternetIdentity and useGetCallerUserRole to provide a unified authentication and authorization state. Export isAuthenticated, isAdmin, isLoading, and userProfile states. This hook simplifies role checks across components and ensures consistent authorization logic."
-        },
-        {
-          "path": "frontend/src/components/AdminGuard.tsx",
-          "operation": "create",
-          "description": "Create a wrapper component that checks if the user is an admin using the useAuth hook. If the user is not an admin, render an access denied message or redirect to the home page. If the user is an admin or still loading, render the children components. This component will be used to protect admin-only pages and sections."
-        },
-        {
-          "path": "frontend/src/pages/StudentsPage.tsx",
+          "path": "frontend/src/hooks/useActor.ts",
           "operation": "modify",
-          "description": "Add role-based rendering using useAuth hook to conditionally show the 'Add Student' button only to admin users. Non-admin users should see the student list in read-only mode without the add functionality."
+          "description": "Remove Internet Identity dependencies from the useActor hook. Modify actor initialization to work with session token authentication instead of Internet Identity principal. Remove the admin initialization logic that depends on getAdminToken since authentication is now handled via username/password. Ensure the actor is recreated when authentication state changes (login/logout). Update the hook to invalidate dependent queries when the actor instance changes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "summary": "Remove ProfileSetupModal component as profiles are now admin-created",
+      "acceptanceCriteria": [
+        "ProfileSetupModal component is removed from the codebase",
+        "App.tsx no longer displays the profile setup modal",
+        "User profiles are fully populated upon account creation",
+        "No first-time setup flow is required for new users"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ProfileSetupModal.tsx",
+          "operation": "delete",
+          "description": "Delete the ProfileSetupModal component since user profiles will be created by admins during account creation with all necessary information"
         },
         {
-          "path": "frontend/src/components/Layout.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Use the useAuth hook to conditionally render admin-only navigation items (Subjects menu item already added in REQ-11). Add visual indicators (e.g., badges or icons) to distinguish admin users in the user profile display area of the header."
+          "description": "Remove all references to ProfileSetupModal component including imports, state management, and rendering logic. Remove the profile setup check since users will have complete profiles upon account creation by admins."
         }
       ]
     }

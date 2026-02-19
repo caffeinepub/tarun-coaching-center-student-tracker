@@ -1,141 +1,201 @@
 {
   "kind": "build_request",
-  "title": "Add admin-only daily updates for marks, test subjects, and attendance",
+  "title": "Replace Google authentication with admin-controlled username/password system",
   "projectName": "Tarun Coaching Center",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-8",
-      "text": "Implement admin role verification in the backend to restrict mark updates, test subject management, and attendance updates to users with admin privileges only",
+      "id": "REQ-18",
+      "text": "Remove all Internet Identity and Google authentication dependencies from the frontend, including the useInternetIdentity hook, AuthClient usage, and Internet Identity provider wrapper",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "only admins create accounts for students/staff and provide id and password"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Internet Identity provider is removed from main.tsx",
+        "useInternetIdentity hook is no longer used in any components",
+        "AuthClient dependencies are removed from the codebase",
+        "No references to Internet Identity remain in authentication flow"
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Implement a traditional username/password login form on the LoginPage component replacing the 'Sign in with Google' button, with fields for username/ID and password, maintaining the dark mode styling",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "Replace the current 'Sign in with Google' button with a traditional username/password login"
+        ]
+      },
+      "acceptanceCriteria": [
+        "LoginPage displays username/ID input field",
+        "LoginPage displays password input field with obscured text",
+        "Submit button is present and functional",
+        "Dark mode styling is maintained consistent with current design",
+        "Form validation prevents empty submissions"
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Create backend Motoko functions to securely store user credentials with password hashing, supporting user creation with username, hashed password, role (admin/staff/student), and name fields",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-recent"
         ],
         "quotes": [
-          "marks and And test subject and attendance to be updated by admin everyday"
+          "Secure Backend Storage - Implement secure credential storage in Motoko with proper password hashing"
         ]
       },
       "acceptanceCriteria": [
-        "Backend methods for updating marks, managing test subjects, and updating attendance verify caller has admin role",
-        "Non-admin users receive appropriate error messages when attempting restricted operations",
-        "Admin role check uses existing role-based access control from user profiles"
+        "Password hashing algorithm is implemented in Motoko",
+        "User credential storage includes username, hashed password, role, and name",
+        "Passwords are never stored in plain text",
+        "createUser function is available for admin use only",
+        "Credential data persists across canister upgrades"
       ]
     },
     {
-      "id": "REQ-9",
-      "text": "Create backend functionality to manage test subjects including adding new subjects, editing subject names, and retrieving all available subjects",
+      "id": "REQ-21",
+      "text": "Implement backend authentication function that verifies username and password credentials, returns a session token or user identity on success, and supports role-based access control",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-recent"
         ],
         "quotes": [
-          "test subject"
+          "Students and staff will log in using credentials created by admins"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores test subjects with unique identifiers and names",
-        "Admin users can add new test subjects",
-        "Admin users can edit existing test subject names",
-        "All users can retrieve the list of available test subjects",
-        "Test subjects persist across canister upgrades"
+        "authenticateUser function verifies username and password",
+        "Function returns user profile including role on successful authentication",
+        "Function returns error message on failed authentication",
+        "Session management mechanism is implemented",
+        "Authentication state persists across page refreshes"
       ]
     },
     {
-      "id": "REQ-10",
-      "text": "Enhance the marks recording interface to support daily updates by admin users, allowing selection from managed test subjects and updating existing mark entries",
+      "id": "REQ-22",
+      "text": "Create an admin-only account creation interface accessible from the Layout navigation menu, with form fields for username/ID, password, role selection (Admin/Teacher/Staff/Student), and name",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-recent"
         ],
         "quotes": [
-          "marks and And test subject and attendance to be updated by admin everyday"
+          "Admin Account Creation Panel - Build an interface where admins can create new accounts for students and staff"
         ]
       },
       "acceptanceCriteria": [
-        "Admin users see a dropdown to select from available test subjects when recording marks",
-        "Admin users can update existing mark entries for a student-subject-exam combination",
-        "The interface displays the current date by default for daily updates",
-        "Non-admin users cannot access mark update functionality",
-        "Success and error messages provide clear feedback for mark operations"
+        "New navigation menu item visible only to admins",
+        "Account creation page includes username/ID input field",
+        "Password input field is present with visibility toggle",
+        "Role dropdown includes Admin, Teacher, Staff, and Student options",
+        "Name input field is included",
+        "Form submission calls backend createUser function",
+        "Success message displays after account creation",
+        "Form validation prevents duplicate usernames"
       ]
     },
     {
-      "id": "REQ-11",
-      "text": "Create an admin interface for test subject management allowing admins to add new subjects and edit existing subject names",
+      "id": "REQ-23",
+      "text": "Update the useAuth hook to manage username/password authentication state instead of Internet Identity, including login, logout, and session persistence functionality",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-recent"
         ],
         "quotes": [
-          "test subject"
+          "Replace Google/Internet Identity authentication with username/password login system"
         ]
       },
       "acceptanceCriteria": [
-        "Admin users can access a test subjects management section",
-        "Interface displays a list of all existing test subjects",
-        "Admin users can add new test subjects with validation",
-        "Admin users can edit existing test subject names",
-        "Non-admin users cannot access this interface",
-        "Changes reflect immediately in the marks recording dropdown"
+        "useAuth hook no longer depends on Internet Identity",
+        "Hook provides login function accepting username and password",
+        "Hook provides logout function that clears authentication state",
+        "Authentication state persists in browser storage",
+        "Hook returns current user profile and role information",
+        "isAuthenticated and isAdmin flags are correctly computed"
       ]
     },
     {
-      "id": "REQ-12",
-      "text": "Enhance the attendance interface to support daily updates by admin users, allowing them to mark or update attendance for multiple students efficiently",
+      "id": "REQ-24",
+      "text": "Update the useActor hook to initialize the backend actor with session-based authentication instead of Internet Identity principal",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-recent"
         ],
         "quotes": [
-          "attendance to be updated by admin everyday"
+          "Implement secure backend credential storage with password hashing in Motoko"
         ]
       },
       "acceptanceCriteria": [
-        "Admin users can mark attendance for the current date",
-        "Admin users can update previously recorded attendance entries",
-        "The interface defaults to today's date for daily attendance marking",
-        "Non-admin users cannot access attendance update functionality",
-        "Attendance updates provide immediate visual feedback and confirmation"
+        "useActor no longer depends on Internet Identity",
+        "Actor initialization uses session token or authentication state",
+        "Backend calls include authentication credentials",
+        "Actor invalidates queries on authentication state changes"
       ]
     },
     {
-      "id": "REQ-13",
-      "text": "Implement role-based UI rendering that shows or hides admin-only features (marks updates, test subject management, attendance updates) based on the authenticated user's role from their profile",
+      "id": "REQ-25",
+      "text": "Remove the ProfileSetupModal component since user profiles will be created by admins during account creation with all necessary information",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-recent"
         ],
         "quotes": [
-          "to be updated by admin everyday"
+          "only admins create accounts for students/staff and provide id and password"
         ]
       },
       "acceptanceCriteria": [
-        "Admin users see all management features including update capabilities",
-        "Non-admin users (Teacher, Staff) see read-only views without update controls",
-        "Role checks use the user profile role field already stored in the backend",
-        "Navigation and page layouts adapt based on user role",
-        "Unauthorized access attempts to admin routes redirect to appropriate pages"
+        "ProfileSetupModal component is removed from the codebase",
+        "App.tsx no longer displays the profile setup modal",
+        "User profiles are fully populated upon account creation",
+        "No first-time setup flow is required for new users"
+      ]
+    },
+    {
+      "id": "REQ-26",
+      "text": "Update backend migration.mo to preserve existing user profile data during the transition from Internet Identity to username/password authentication system",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ]
+      },
+      "acceptanceCriteria": [
+        "migration.mo includes logic to preserve existing userProfiles Map data",
+        "Existing user profiles are associated with new credential system",
+        "No data loss occurs during canister upgrade",
+        "Migration handles empty state gracefully for fresh deployments"
       ]
     }
   ],
   "constraints": [
-    "Use existing role-based access control from user profiles (Administrator, Teacher, Staff roles)",
-    "Preserve existing student records, marks, and attendance data structures",
-    "Do not modify frontend/src/hooks/useInternetIdentity.ts or other immutable paths",
-    "Maintain single-actor architecture in backend/main.mo"
+    "Maintain single-actor architecture in backend/main.mo",
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useInternetIdentity.tsx (these will be removed entirely)",
+    "Preserve existing student, marks, attendance, and subject management functionality",
+    "Keep dark mode styling consistent with current LoginPage design",
+    "Maintain role-based access control for admin features"
   ],
   "nonGoals": [
-    "Multi-day or bulk attendance marking interfaces",
-    "Advanced reporting or analytics features",
-    "Email or notification systems for attendance/marks updates",
-    "Student or parent portal access",
-    "Grade calculation or GPA computation features"
+    "Password reset or forgot password functionality",
+    "Email verification for new accounts",
+    "Multi-factor authentication",
+    "OAuth integration with other providers",
+    "Account self-registration by students or staff",
+    "Batch account import from CSV or external sources"
   ],
   "imageRequirements": {
     "required": [],

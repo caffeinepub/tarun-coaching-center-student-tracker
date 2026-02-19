@@ -1,35 +1,68 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-19T13:21:55.518Z",
-  "summary": "The implementation successfully covers all six requirements (REQ-8 through REQ-13) for admin-only daily updates. Backend admin verification is implemented, test subject management is functional with persistence, and frontend interfaces include proper role-based rendering with admin guards. All acceptance criteria appear to be met based on the diff evidence.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-19T14:15:44.900Z",
+  "summary": "The implementation successfully removes Internet Identity authentication and replaces it with a username/password system. Backend includes user credential storage with password hashing, authentication functions, and session token management. Frontend implements a traditional login form, account creation interface for admins, and updated authentication hooks. However, several requirements lack clear implementation evidence in the truncated diff, and the ProfileSetupModal removal cannot be verified.",
+  "missing_requirements": [
     {
-      "description": "Migration module with pre-populated German subject names (Biologie, Chemie, Deutsch, Englisch, etc.)",
-      "reason": "BuildRequest does not specify pre-population of subjects or German language subjects. It only requires the ability to add/edit subjects dynamically.",
+      "id": "REQ-18",
+      "requirement": "Remove all Internet Identity and Google authentication dependencies from the frontend, including the useInternetIdentity hook, AuthClient usage, and Internet Identity provider wrapper",
+      "reason": "The diff shows no removal of useInternetIdentity.ts or useInternetIdentity.tsx files in the REMOVED FILES section. The constraint explicitly states these files will be removed entirely, but no evidence of their deletion is present. Additionally, no diff content shows removal of Internet Identity provider from main.tsx or AuthClient imports from package dependencies.",
+      "evidence": []
+    },
+    {
+      "id": "REQ-20",
+      "requirement": "Password hashing algorithm is implemented in Motoko and credential data persists across canister upgrades",
+      "reason": "While backend/main.mo shows User type with passwordHash field and user storage structures, the actual password hashing implementation is not visible in the truncated backend/main.mo content. The code cuts off before showing the registerUser or authentication functions that would contain hashing logic. Additionally, no stable variable declarations are shown to ensure persistence across upgrades.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "requirement": "Session management mechanism is implemented and authentication state persists across page refreshes",
+      "reason": "While useAuth.ts shows token storage in localStorage for persistence, and backend/main.mo declares sessionTokens map, the actual session validation mechanism in backend functions is not visible in the truncated diff. The getUserByToken and logout functions referenced in useAuth are not shown in the backend implementation.",
+      "evidence": [
+        "frontend/src/hooks/useAuth.ts",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "requirement": "Update the useActor hook to initialize the backend actor with session-based authentication instead of Internet Identity principal",
+      "reason": "The useActor.ts hook file is not included in the diff at all. While useAuth.ts uses the actor from useActor and passes tokens, there is no evidence showing how useActor was modified to remove Internet Identity dependencies or how it now handles session-based authentication.",
+      "evidence": []
+    },
+    {
+      "id": "REQ-25",
+      "requirement": "Remove the ProfileSetupModal component since user profiles will be created by admins during account creation with all necessary information",
+      "reason": "While ProfileSetupModal.tsx appears in the MODIFIED FILES list and App.tsx shows no ProfileSetupModal usage, the actual file content shows no changes (the file appears blank/empty in the diff). There is no clear evidence the component was gutted or that its removal logic was implemented. The REMOVED FILES section is empty, so it was not deleted.",
+      "evidence": [
+        "frontend/src/components/ProfileSetupModal.tsx"
+      ]
+    },
+    {
+      "id": "REQ-26",
+      "requirement": "Existing user profiles are associated with new credential system",
+      "reason": "The migration.mo file creates empty maps for users and principalToUsername, but includes no logic to migrate or associate existing userProfiles data with the new credential system. It only preserves nextStudentId. There is no mapping between old Principal-based profiles and new username-based credentials.",
       "evidence": [
         "backend/migration.mo"
       ]
     }
   ],
-  "confidence": 0.92,
+  "hallucinated_features": [],
+  "confidence": 0.75,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
     "frontend/src/App.tsx",
-    "frontend/src/components/AdminGuard.tsx",
-    "frontend/src/components/AttendanceForm.tsx",
     "frontend/src/components/Layout.tsx",
-    "frontend/src/components/MarkForm.tsx",
-    "frontend/src/components/SubjectManagement.tsx",
+    "frontend/src/components/ProfileSetupModal.tsx",
     "frontend/src/hooks/useAuth.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/AttendancePage.tsx",
-    "frontend/src/pages/MarksPage.tsx",
-    "frontend/src/pages/StudentsPage.tsx",
-    "frontend/src/pages/SubjectsPage.tsx",
+    "frontend/src/pages/AccountCreationPage.tsx",
+    "frontend/src/pages/LoginPage.tsx",
     "project_state.json"
   ]
 }
