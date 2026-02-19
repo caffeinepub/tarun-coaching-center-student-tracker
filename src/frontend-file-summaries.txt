@@ -1,0 +1,18 @@
+{
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, authentication flow, profile setup modal integration, and route definitions for all pages (home, students, marks, attendance, login).",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including user profile management, student operations, marks tracking, and attendance recording with proper error handling and cache invalidation.",
+  "frontend/src/components/Layout.tsx": "Main layout wrapper component with responsive header navigation, logo display, user profile section, mobile menu, and footer with caffeine.ai attribution.",
+  "frontend/src/components/ProfileSetupModal.tsx": "Modal dialog for first-time user profile setup that prompts authenticated users to enter their name and role before accessing the application.",
+  "frontend/src/pages/LoginPage.tsx": "Dedicated login page with Internet Identity authentication, displaying the coaching center logo and branding with secure login flow.",
+  "frontend/src/pages/HomePage.tsx": "Landing page with hero banner, welcome message, feature cards for navigation to students/marks/attendance sections, and quick stats overview.",
+  "frontend/src/pages/StudentsPage.tsx": "Student management page with add student functionality, search interface, and placeholder for student list (pending backend getAllStudents method) with proper icon imports from lucide-react.",
+  "frontend/src/components/StudentForm.tsx": "Reusable form component for adding new students with fields for name, roll number, grade, and contact information with validation.",
+  "frontend/src/pages/MarksPage.tsx": "Marks management page with split layout for mark entry form and marks history display with visual performance indicators.",
+  "frontend/src/components/MarkForm.tsx": "Form component for recording student marks with fields for student ID, subject, exam type, and score with grade calculation.",
+  "frontend/src/components/MarksHistory.tsx": "Display component showing student marks grouped by subject with color-coded grades (A-F), performance icons, and visual indicators.",
+  "frontend/src/pages/AttendancePage.tsx": "Attendance management page with split layout for attendance recording form and history view with statistics.",
+  "frontend/src/components/AttendanceForm.tsx": "Form component for marking individual student attendance with date picker and present/absent toggle switch.",
+  "frontend/src/components/AttendanceHistory.tsx": "Display component showing attendance records with statistics (percentage, present/absent counts) and chronological list with visual indicators.",
+  "frontend/src/index.css": "Global styles with education-focused OKLCH color system featuring warm blues, greens, and orange accents for both light and dark modes.",
+  "frontend/tailwind.config.js": "Tailwind configuration with custom education theme colors, Poppins/Inter font families, extended shadows, and professional academic styling."
+}

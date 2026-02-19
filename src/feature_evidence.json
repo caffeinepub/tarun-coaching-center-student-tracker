@@ -1,0 +1,94 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-a-frontend-interface-to-add-view-edit-and-delete-student-records",
+      "featureTitle": "Create a frontend interface to add, view, edit, and delete student records",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/StudentForm.tsx",
+        "frontend/src/pages/StudentsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-frontend-interface-to-record-and-view-student-marks",
+      "featureTitle": "Create a frontend interface to record and view student marks",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/MarkForm.tsx",
+        "frontend/src/components/MarksHistory.tsx",
+        "frontend/src/pages/MarksPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-frontend-interface-to-mark-and-view-student-attendance",
+      "featureTitle": "Create a frontend interface to mark and view student attendance",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AttendanceForm.tsx",
+        "frontend/src/components/AttendanceHistory.tsx",
+        "frontend/src/pages/AttendancePage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-design-a-professional-education-focused-visual-theme-with-warm-welcoming-colors-and-clear-typography-that-reflects-an-academic-coaching-environment",
+      "featureTitle": "Design a professional, education-focused visual theme with warm, welcoming colors and clear typography that reflects an academic coaching environment",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/Layout.tsx",
+        "frontend/src/components/ProfileSetupModal.tsx",
+        "frontend/src/index.css",
+        "frontend/src/pages/HomePage.tsx",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

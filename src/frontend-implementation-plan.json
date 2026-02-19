@@ -1,0 +1,171 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Tarun Coaching Tracker - Student Marks and Attendance Tracking System",
+  "requirements": [
+    {
+      "id": "REQ-4",
+      "summary": "Create frontend interface to manage student records with add, view, edit, delete, and search functionality",
+      "acceptanceCriteria": [
+        "Form to add new students with all required fields",
+        "List view showing all students",
+        "Ability to edit existing student information",
+        "Ability to remove student records",
+        "Search or filter functionality to find specific students"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useStudents.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for student CRUD operations: useGetStudent, useAddStudent, useGetAllStudents. Use the authorization component to ensure only authenticated users can manage students. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/StudentsPage.tsx",
+          "operation": "create",
+          "description": "Create students management page with list view, add/edit form modal, delete confirmation, and search/filter functionality. Display all students in a table or card layout. Include buttons to add new student, edit, and delete. Use the authorization component to restrict access to authenticated users only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/StudentForm.tsx",
+          "operation": "create",
+          "description": "Create reusable student form component with fields for name, roll number, grade, and contact details. Support both add and edit modes. Include validation for required fields."
+        },
+        {
+          "path": "frontend/src/components/StudentList.tsx",
+          "operation": "create",
+          "description": "Create student list component displaying students in a table with columns for roll number, name, grade, and contact. Include action buttons for edit and delete. Add search input for filtering by name or roll number."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /students pointing to StudentsPage component. Ensure the route is protected and requires authentication using the authorization component. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/Navigation.tsx",
+          "operation": "create",
+          "description": "Create navigation component with links to Students, Marks, and Attendance pages. Show user profile name and logout button. Only display navigation when user is authenticated. Use the authorization component for login/logout functionality. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Create frontend interface to record and view student marks with subject details and performance indicators",
+      "acceptanceCriteria": [
+        "Form to enter marks for a student with subject and exam details",
+        "Display marks history for individual students",
+        "Show marks summary or report cards",
+        "Visual indicators for performance (e.g., grades, percentages)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useMarks.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for marks operations: useAddMark, useGetMarksByStudent. Use the authorization component to ensure only authenticated users can record and view marks. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/MarksPage.tsx",
+          "operation": "create",
+          "description": "Create marks management page with student selection dropdown, marks entry form, and marks history display for selected student. Show visual performance indicators (grades/percentages). Use the authorization component to restrict access to authenticated users. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/MarkForm.tsx",
+          "operation": "create",
+          "description": "Create mark entry form component with fields for student selection (dropdown), subject, exam type, and score. Include validation for numeric score values."
+        },
+        {
+          "path": "frontend/src/components/MarksHistory.tsx",
+          "operation": "create",
+          "description": "Create marks history component displaying marks records for a student grouped by subject. Include visual indicators like color-coded grades (A/B/C/D) or percentage bars based on score."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /marks pointing to MarksPage component. Ensure the route is protected and requires authentication using the authorization component. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Create frontend interface to mark and view student attendance with calendar selection and statistics",
+      "acceptanceCriteria": [
+        "Interface to mark attendance for all students on a given date",
+        "Calendar or date picker to select attendance date",
+        "View attendance history for individual students",
+        "Display attendance statistics (percentage present, absent days)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAttendance.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for attendance operations: useRecordAttendance, useGetAttendanceByStudent, useGetAttendanceByDate. Use the authorization component to ensure only authenticated users can mark and view attendance. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/AttendancePage.tsx",
+          "operation": "create",
+          "description": "Create attendance management page with date picker, bulk attendance marking interface for all students on selected date, and student attendance history view. Display attendance statistics (percentage present, total absent days). Use the authorization component to restrict access to authenticated users. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AttendanceForm.tsx",
+          "operation": "create",
+          "description": "Create attendance marking component with date picker and list of all students with present/absent toggle buttons or checkboxes. Allow bulk marking for a specific date."
+        },
+        {
+          "path": "frontend/src/components/AttendanceHistory.tsx",
+          "operation": "create",
+          "description": "Create attendance history component displaying attendance records for a selected student in a calendar or table view. Include statistics calculation showing percentage present and total absent days."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /attendance pointing to AttendancePage component. Ensure the route is protected and requires authentication using the authorization component. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Design professional education-focused visual theme with warm colors, clear typography, and academic branding",
+      "acceptanceCriteria": [
+        "Consistent color scheme across all pages",
+        "Typography is readable and professional",
+        "Layout is clean and organized for easy navigation",
+        "Design conveys trust and academic professionalism"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Define education-focused color scheme with warm, welcoming colors (e.g., blues, greens, warm neutrals). Set professional typography with readable font families and sizes. Include custom CSS variables for primary, secondary, and accent colors that reflect academic professionalism."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Extend Tailwind theme with custom color palette for education theme (primary: warm blue, secondary: green, accent: orange/gold). Configure typography settings for professional academic appearance with appropriate font sizes and weights."
+        },
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "create",
+          "description": "Create main layout component with header containing the logo (frontend/public/assets/generated/logo.dim_200x200.png), navigation menu, and user profile section. Ensure consistent spacing, clean structure, and professional appearance across all pages. Wire this layout to wrap all authenticated pages."
+        },
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "create",
+          "description": "Create homepage with hero banner image (frontend/public/assets/generated/hero-banner.dim_1200x400.png) showing coaching environment, welcome message, and overview of system features. Display logo (frontend/public/assets/generated/logo.dim_200x200.png) prominently in header section. Only accessible to authenticated users."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for / (homepage) pointing to HomePage component. Wrap authenticated routes with Layout component. Ensure the homepage requires authentication using the authorization component. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ProfileSetupModal.tsx",
+          "operation": "create",
+          "description": "Create profile setup modal component that prompts users to enter their name on first login. Use the authorization component's saveCallerUserProfile method to save the user profile. Display this modal only when user is authenticated but has no profile. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Integrate ProfileSetupModal into the main App component. Show the modal when user is authenticated but profile is null. Use the authorization component's useGetCallerUserProfile hook following the pattern to prevent modal flash. Clear query cache on logout. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

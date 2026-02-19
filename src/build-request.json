@@ -1,0 +1,140 @@
+{
+  "kind": "build_request",
+  "title": "Create student marks and attendance tracking system",
+  "projectName": "Tarun Coaching Tracker",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a backend data model to store student information including name, roll number, class/grade, and contact details",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Student records can be created with unique identifiers",
+        "Student data persists across canister upgrades",
+        "Students can be retrieved by ID or roll number"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement backend functionality to record and retrieve student marks for different subjects and exams",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Marks can be recorded with subject name, exam date, and score",
+        "Marks are associated with specific students",
+        "Historical marks data is maintained",
+        "Marks can be queried by student, subject, or date range"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement backend functionality to track daily attendance records for students",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Attendance can be marked as present, absent, or late for each date",
+        "Attendance records are associated with specific students",
+        "Attendance history is preserved",
+        "Attendance can be queried by student or date range"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Create a frontend interface to add, view, edit, and delete student records",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Form to add new students with all required fields",
+        "List view showing all students",
+        "Ability to edit existing student information",
+        "Ability to remove student records",
+        "Search or filter functionality to find specific students"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Create a frontend interface to record and view student marks",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Form to enter marks for a student with subject and exam details",
+        "Display marks history for individual students",
+        "Show marks summary or report cards",
+        "Visual indicators for performance (e.g., grades, percentages)"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Create a frontend interface to mark and view student attendance",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Interface to mark attendance for all students on a given date",
+        "Calendar or date picker to select attendance date",
+        "View attendance history for individual students",
+        "Display attendance statistics (percentage present, absent days)"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Design a professional, education-focused visual theme with warm, welcoming colors and clear typography that reflects an academic coaching environment",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Consistent color scheme across all pages",
+        "Typography is readable and professional",
+        "Layout is clean and organized for easy navigation",
+        "Design conveys trust and academic professionalism"
+      ]
+    }
+  ],
+  "constraints": [
+    "All backend logic must be implemented in a single Motoko actor",
+    "Use React with TypeScript for frontend",
+    "Use Tailwind CSS for styling",
+    "Follow single-actor architecture pattern"
+  ],
+  "nonGoals": [
+    "Fee payment tracking or billing",
+    "Teacher management or staff accounts",
+    "Advanced analytics or reporting dashboards",
+    "Parent portal or communication features",
+    "Automated grade calculation or GPA systems"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Educational coaching center logo with books and graduation cap motif (logo.dim_200x200.png)",
+      "Hero banner image showing students studying in a coaching environment (hero-banner.dim_1200x400.png)"
+    ],
+    "edits": []
+  }
+}

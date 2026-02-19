@@ -1,2 +1,3 @@
-# tarun-coaching-center-student-tracker
-Exported from Caffeine project: Tarun Coaching Center Student Tracker
+## Tarun Coaching Center Student Tracker
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`
