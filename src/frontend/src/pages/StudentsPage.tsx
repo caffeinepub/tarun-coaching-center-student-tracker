@@ -1,6 +1,7 @@
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 
 export default function StudentsPage() {
   const { identity } = useInternetIdentity();
+  const { isAdmin, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -32,10 +34,12 @@ export default function StudentsPage() {
           <h1 className="text-3xl font-bold text-blue-900 dark:text-blue-100">Student Management</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Add and manage student records</p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)} className="gap-2 shadow-md">
-          <UserPlus className="w-4 h-4" />
-          Add New Student
-        </Button>
+        {!authLoading && isAdmin && (
+          <Button onClick={() => setShowAddDialog(true)} className="gap-2 shadow-md">
+            <UserPlus className="w-4 h-4" />
+            Add New Student
+          </Button>
+        )}
       </div>
 
       <Card className="shadow-lg border-blue-100 dark:border-gray-700">
@@ -59,7 +63,8 @@ export default function StudentsPage() {
       <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
         <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
         <AlertDescription className="text-blue-800 dark:text-blue-300">
-          <strong>Note:</strong> The backend is missing getAllStudents(), updateStudent(), and deleteStudent() methods. Student list display and edit/delete functionality cannot be implemented until these methods are added.
+          <strong>Note:</strong> The backend is missing getAllStudents(), updateStudent(), and deleteStudent() methods.
+          Student list display and edit/delete functionality cannot be implemented until these methods are added.
         </AlertDescription>
       </Alert>
 
@@ -76,14 +81,16 @@ export default function StudentsPage() {
         </CardContent>
       </Card>
 
-      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Add New Student</DialogTitle>
-          </DialogHeader>
-          <StudentForm onSuccess={() => setShowAddDialog(false)} />
-        </DialogContent>
-      </Dialog>
+      {isAdmin && (
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Student</DialogTitle>
+            </DialogHeader>
+            <StudentForm onSuccess={() => setShowAddDialog(false)} />
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

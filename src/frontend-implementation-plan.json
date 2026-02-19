@@ -1,169 +1,133 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Tarun Coaching Tracker - Student Marks and Attendance Tracking System",
+  "title": "Add admin-only daily updates for marks, test subjects, and attendance",
   "requirements": [
     {
-      "id": "REQ-4",
-      "summary": "Create frontend interface to manage student records with add, view, edit, delete, and search functionality",
+      "id": "REQ-10",
+      "summary": "Enhance the marks recording interface to support daily updates by admin users with test subject selection and update capability",
       "acceptanceCriteria": [
-        "Form to add new students with all required fields",
-        "List view showing all students",
-        "Ability to edit existing student information",
-        "Ability to remove student records",
-        "Search or filter functionality to find specific students"
+        "Admin users see a dropdown to select from available test subjects when recording marks",
+        "Admin users can update existing mark entries for a student-subject-exam combination",
+        "The interface displays the current date by default for daily updates",
+        "Non-admin users cannot access mark update functionality",
+        "Success and error messages provide clear feedback for mark operations"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useStudents.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for student CRUD operations: useGetStudent, useAddStudent, useGetAllStudents. Use the authorization component to ensure only authenticated users can manage students. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/StudentsPage.tsx",
-          "operation": "create",
-          "description": "Create students management page with list view, add/edit form modal, delete confirmation, and search/filter functionality. Display all students in a table or card layout. Include buttons to add new student, edit, and delete. Use the authorization component to restrict access to authenticated users only. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/StudentForm.tsx",
-          "operation": "create",
-          "description": "Create reusable student form component with fields for name, roll number, grade, and contact details. Support both add and edit modes. Include validation for required fields."
-        },
-        {
-          "path": "frontend/src/components/StudentList.tsx",
-          "operation": "create",
-          "description": "Create student list component displaying students in a table with columns for roll number, name, grade, and contact. Include action buttons for edit and delete. Add search input for filtering by name or roll number."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add route for /students pointing to StudentsPage component. Ensure the route is protected and requires authentication using the authorization component. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/Navigation.tsx",
-          "operation": "create",
-          "description": "Create navigation component with links to Students, Marks, and Attendance pages. Show user profile name and logout button. Only display navigation when user is authenticated. Use the authorization component for login/logout functionality. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Create frontend interface to record and view student marks with subject details and performance indicators",
-      "acceptanceCriteria": [
-        "Form to enter marks for a student with subject and exam details",
-        "Display marks history for individual students",
-        "Show marks summary or report cards",
-        "Visual indicators for performance (e.g., grades, percentages)"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useMarks.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for marks operations: useAddMark, useGetMarksByStudent. Use the authorization component to ensure only authenticated users can record and view marks. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/MarksPage.tsx",
-          "operation": "create",
-          "description": "Create marks management page with student selection dropdown, marks entry form, and marks history display for selected student. Show visual performance indicators (grades/percentages). Use the authorization component to restrict access to authenticated users. Verify the component's usage instructions before implementing."
+          "description": "Add useGetAllSubjects query hook to fetch the list of available test subjects from the backend using getAllSubjects() method. Add useEditMark mutation hook (if backend supports updating marks) or document that addMark() is used for both create and update operations."
         },
         {
           "path": "frontend/src/components/MarkForm.tsx",
-          "operation": "create",
-          "description": "Create mark entry form component with fields for student selection (dropdown), subject, exam type, and score. Include validation for numeric score values."
-        },
-        {
-          "path": "frontend/src/components/MarksHistory.tsx",
-          "operation": "create",
-          "description": "Create marks history component displaying marks records for a student grouped by subject. Include visual indicators like color-coded grades (A/B/C/D) or percentage bars based on score."
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add route for /marks pointing to MarksPage component. Ensure the route is protected and requires authentication using the authorization component. Verify the component's usage instructions before implementing."
+          "description": "Replace the manual subject text input with a dropdown/select component populated from useGetAllSubjects hook. Add admin role check using useGetCallerUserRole hook to conditionally render the form. Set the date field to default to today's date for daily updates. Update form validation to work with subject selection. Add clear success/error feedback messages using toast notifications."
+        },
+        {
+          "path": "frontend/src/pages/MarksPage.tsx",
+          "operation": "modify",
+          "description": "Add role-based conditional rendering using useGetCallerUserRole hook to show the MarkForm only to admin users. Display an appropriate message for non-admin users indicating they cannot update marks. Ensure the page gracefully handles loading states while checking user role."
         }
       ]
     },
     {
-      "id": "REQ-6",
-      "summary": "Create frontend interface to mark and view student attendance with calendar selection and statistics",
+      "id": "REQ-11",
+      "summary": "Create an admin interface for test subject management allowing admins to add and edit subjects",
       "acceptanceCriteria": [
-        "Interface to mark attendance for all students on a given date",
-        "Calendar or date picker to select attendance date",
-        "View attendance history for individual students",
-        "Display attendance statistics (percentage present, absent days)"
+        "Admin users can access a test subjects management section",
+        "Interface displays a list of all existing test subjects",
+        "Admin users can add new test subjects with validation",
+        "Admin users can edit existing test subject names",
+        "Non-admin users cannot access this interface",
+        "Changes reflect immediately in the marks recording dropdown"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useAttendance.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for attendance operations: useRecordAttendance, useGetAttendanceByStudent, useGetAttendanceByDate. Use the authorization component to ensure only authenticated users can mark and view attendance. Verify the component's usage instructions before implementing."
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useAddSubject mutation hook that calls the backend addSubject() method with proper cache invalidation for the subjects list query. Add useEditSubject mutation hook that calls the backend editSubject() method with cache invalidation. Include toast notifications for success and error states."
         },
         {
-          "path": "frontend/src/pages/AttendancePage.tsx",
+          "path": "frontend/src/components/SubjectManagement.tsx",
           "operation": "create",
-          "description": "Create attendance management page with date picker, bulk attendance marking interface for all students on selected date, and student attendance history view. Display attendance statistics (percentage present, total absent days). Use the authorization component to restrict access to authenticated users. Verify the component's usage instructions before implementing."
+          "description": "Create a new component that displays a list of all test subjects using useGetAllSubjects hook. Include a form to add new subjects with input validation. Add inline edit functionality for existing subjects with edit/save/cancel buttons. Implement admin-only access check using useGetCallerUserRole hook at the component level. Show loading states and empty states appropriately."
         },
         {
-          "path": "frontend/src/components/AttendanceForm.tsx",
+          "path": "frontend/src/pages/SubjectsPage.tsx",
           "operation": "create",
-          "description": "Create attendance marking component with date picker and list of all students with present/absent toggle buttons or checkboxes. Allow bulk marking for a specific date."
-        },
-        {
-          "path": "frontend/src/components/AttendanceHistory.tsx",
-          "operation": "create",
-          "description": "Create attendance history component displaying attendance records for a selected student in a calendar or table view. Include statistics calculation showing percentage present and total absent days."
+          "description": "Create a new page component that renders the SubjectManagement component. Add role-based access control to redirect non-admin users or show an access denied message. Include page title and description explaining the subject management functionality."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add route for /attendance pointing to AttendancePage component. Ensure the route is protected and requires authentication using the authorization component. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Design professional education-focused visual theme with warm colors, clear typography, and academic branding",
-      "acceptanceCriteria": [
-        "Consistent color scheme across all pages",
-        "Typography is readable and professional",
-        "Layout is clean and organized for easy navigation",
-        "Design conveys trust and academic professionalism"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Define education-focused color scheme with warm, welcoming colors (e.g., blues, greens, warm neutrals). Set professional typography with readable font families and sizes. Include custom CSS variables for primary, secondary, and accent colors that reflect academic professionalism."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Extend Tailwind theme with custom color palette for education theme (primary: warm blue, secondary: green, accent: orange/gold). Configure typography settings for professional academic appearance with appropriate font sizes and weights."
+          "description": "Import SubjectsPage and add a new route for '/subjects' in the router configuration. Ensure the route is properly configured with the Route component from TanStack Router."
         },
         {
           "path": "frontend/src/components/Layout.tsx",
-          "operation": "create",
-          "description": "Create main layout component with header containing the logo (frontend/public/assets/generated/logo.dim_200x200.png), navigation menu, and user profile section. Ensure consistent spacing, clean structure, and professional appearance across all pages. Wire this layout to wrap all authenticated pages."
-        },
-        {
-          "path": "frontend/src/pages/HomePage.tsx",
-          "operation": "create",
-          "description": "Create homepage with hero banner image (frontend/public/assets/generated/hero-banner.dim_1200x400.png) showing coaching environment, welcome message, and overview of system features. Display logo (frontend/public/assets/generated/logo.dim_200x200.png) prominently in header section. Only accessible to authenticated users."
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add route for / (homepage) pointing to HomePage component. Wrap authenticated routes with Layout component. Ensure the homepage requires authentication using the authorization component. Verify the component's usage instructions before implementing."
-        },
+          "description": "Add a 'Subjects' navigation menu item that links to the /subjects route. Use role-based conditional rendering with useGetCallerUserRole hook to show this menu item only to admin users. Position the menu item appropriately in the navigation between existing items."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Enhance the attendance interface to support daily updates by admin users with efficient multi-student marking",
+      "acceptanceCriteria": [
+        "Admin users can mark attendance for the current date",
+        "Admin users can update previously recorded attendance entries",
+        "The interface defaults to today's date for daily attendance marking",
+        "Non-admin users cannot access attendance update functionality",
+        "Attendance updates provide immediate visual feedback and confirmation"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/ProfileSetupModal.tsx",
-          "operation": "create",
-          "description": "Create profile setup modal component that prompts users to enter their name on first login. Use the authorization component's saveCallerUserProfile method to save the user profile. Display this modal only when user is authenticated but has no profile. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/AttendanceForm.tsx",
           "operation": "modify",
-          "description": "Integrate ProfileSetupModal into the main App component. Show the modal when user is authenticated but profile is null. Use the authorization component's useGetCallerUserProfile hook following the pattern to prevent modal flash. Clear query cache on logout. Verify the component's usage instructions before implementing."
+          "description": "Set the date input to default to today's date (new Date().toISOString().split('T')[0]). Add admin role check using useGetCallerUserRole hook to conditionally render the form or disable it for non-admin users. Enhance success feedback with toast notifications. Add a note that the backend recordAttendance() method handles both new records and updates."
+        },
+        {
+          "path": "frontend/src/pages/AttendancePage.tsx",
+          "operation": "modify",
+          "description": "Add role-based conditional rendering using useGetCallerUserRole hook to show the AttendanceForm only to admin users. Display an appropriate message for non-admin users indicating they cannot update attendance. Ensure the page gracefully handles loading states while checking user role."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Implement role-based UI rendering that shows or hides admin-only features based on authenticated user's role",
+      "acceptanceCriteria": [
+        "Admin users see all management features including update capabilities",
+        "Non-admin users (Teacher, Staff) see read-only views without update controls",
+        "Role checks use the user profile role field already stored in the backend",
+        "Navigation and page layouts adapt based on user role",
+        "Unauthorized access attempts to admin routes redirect to appropriate pages"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useGetCallerUserRole query hook that calls the backend isCallerAdmin() method to determine if the current user has admin privileges. Configure the query with appropriate caching and refetch behavior. This hook will be used throughout the application for role-based UI rendering."
+        },
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "create",
+          "description": "Create a custom hook that combines useInternetIdentity and useGetCallerUserRole to provide a unified authentication and authorization state. Export isAuthenticated, isAdmin, isLoading, and userProfile states. This hook simplifies role checks across components and ensures consistent authorization logic."
+        },
+        {
+          "path": "frontend/src/components/AdminGuard.tsx",
+          "operation": "create",
+          "description": "Create a wrapper component that checks if the user is an admin using the useAuth hook. If the user is not an admin, render an access denied message or redirect to the home page. If the user is an admin or still loading, render the children components. This component will be used to protect admin-only pages and sections."
+        },
+        {
+          "path": "frontend/src/pages/StudentsPage.tsx",
+          "operation": "modify",
+          "description": "Add role-based rendering using useAuth hook to conditionally show the 'Add Student' button only to admin users. Non-admin users should see the student list in read-only mode without the add functionality."
+        },
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "modify",
+          "description": "Use the useAuth hook to conditionally render admin-only navigation items (Subjects menu item already added in REQ-11). Add visual indicators (e.g., badges or icons) to distinguish admin users in the user profile display area of the header."
         }
       ]
     }

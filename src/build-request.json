@@ -1,140 +1,144 @@
 {
   "kind": "build_request",
-  "title": "Create student marks and attendance tracking system",
-  "projectName": "Tarun Coaching Tracker",
+  "title": "Add admin-only daily updates for marks, test subjects, and attendance",
+  "projectName": "Tarun Coaching Center",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create a backend data model to store student information including name, roll number, class/grade, and contact details",
+      "id": "REQ-8",
+      "text": "Implement admin role verification in the backend to restrict mark updates, test subject management, and attendance updates to users with admin privileges only",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-6"
+        ],
+        "quotes": [
+          "marks and And test subject and attendance to be updated by admin everyday"
         ]
       },
       "acceptanceCriteria": [
-        "Student records can be created with unique identifiers",
-        "Student data persists across canister upgrades",
-        "Students can be retrieved by ID or roll number"
+        "Backend methods for updating marks, managing test subjects, and updating attendance verify caller has admin role",
+        "Non-admin users receive appropriate error messages when attempting restricted operations",
+        "Admin role check uses existing role-based access control from user profiles"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Implement backend functionality to record and retrieve student marks for different subjects and exams",
+      "id": "REQ-9",
+      "text": "Create backend functionality to manage test subjects including adding new subjects, editing subject names, and retrieving all available subjects",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-6"
+        ],
+        "quotes": [
+          "test subject"
         ]
       },
       "acceptanceCriteria": [
-        "Marks can be recorded with subject name, exam date, and score",
-        "Marks are associated with specific students",
-        "Historical marks data is maintained",
-        "Marks can be queried by student, subject, or date range"
+        "Backend stores test subjects with unique identifiers and names",
+        "Admin users can add new test subjects",
+        "Admin users can edit existing test subject names",
+        "All users can retrieve the list of available test subjects",
+        "Test subjects persist across canister upgrades"
       ]
     },
     {
-      "id": "REQ-3",
-      "text": "Implement backend functionality to track daily attendance records for students",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Attendance can be marked as present, absent, or late for each date",
-        "Attendance records are associated with specific students",
-        "Attendance history is preserved",
-        "Attendance can be queried by student or date range"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Create a frontend interface to add, view, edit, and delete student records",
+      "id": "REQ-10",
+      "text": "Enhance the marks recording interface to support daily updates by admin users, allowing selection from managed test subjects and updating existing mark entries",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-6"
+        ],
+        "quotes": [
+          "marks and And test subject and attendance to be updated by admin everyday"
         ]
       },
       "acceptanceCriteria": [
-        "Form to add new students with all required fields",
-        "List view showing all students",
-        "Ability to edit existing student information",
-        "Ability to remove student records",
-        "Search or filter functionality to find specific students"
+        "Admin users see a dropdown to select from available test subjects when recording marks",
+        "Admin users can update existing mark entries for a student-subject-exam combination",
+        "The interface displays the current date by default for daily updates",
+        "Non-admin users cannot access mark update functionality",
+        "Success and error messages provide clear feedback for mark operations"
       ]
     },
     {
-      "id": "REQ-5",
-      "text": "Create a frontend interface to record and view student marks",
+      "id": "REQ-11",
+      "text": "Create an admin interface for test subject management allowing admins to add new subjects and edit existing subject names",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-6"
+        ],
+        "quotes": [
+          "test subject"
         ]
       },
       "acceptanceCriteria": [
-        "Form to enter marks for a student with subject and exam details",
-        "Display marks history for individual students",
-        "Show marks summary or report cards",
-        "Visual indicators for performance (e.g., grades, percentages)"
+        "Admin users can access a test subjects management section",
+        "Interface displays a list of all existing test subjects",
+        "Admin users can add new test subjects with validation",
+        "Admin users can edit existing test subject names",
+        "Non-admin users cannot access this interface",
+        "Changes reflect immediately in the marks recording dropdown"
       ]
     },
     {
-      "id": "REQ-6",
-      "text": "Create a frontend interface to mark and view student attendance",
+      "id": "REQ-12",
+      "text": "Enhance the attendance interface to support daily updates by admin users, allowing them to mark or update attendance for multiple students efficiently",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-6"
+        ],
+        "quotes": [
+          "attendance to be updated by admin everyday"
         ]
       },
       "acceptanceCriteria": [
-        "Interface to mark attendance for all students on a given date",
-        "Calendar or date picker to select attendance date",
-        "View attendance history for individual students",
-        "Display attendance statistics (percentage present, absent days)"
+        "Admin users can mark attendance for the current date",
+        "Admin users can update previously recorded attendance entries",
+        "The interface defaults to today's date for daily attendance marking",
+        "Non-admin users cannot access attendance update functionality",
+        "Attendance updates provide immediate visual feedback and confirmation"
       ]
     },
     {
-      "id": "REQ-7",
-      "text": "Design a professional, education-focused visual theme with warm, welcoming colors and clear typography that reflects an academic coaching environment",
+      "id": "REQ-13",
+      "text": "Implement role-based UI rendering that shows or hides admin-only features (marks updates, test subject management, attendance updates) based on the authenticated user's role from their profile",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-6"
+        ],
+        "quotes": [
+          "to be updated by admin everyday"
         ]
       },
       "acceptanceCriteria": [
-        "Consistent color scheme across all pages",
-        "Typography is readable and professional",
-        "Layout is clean and organized for easy navigation",
-        "Design conveys trust and academic professionalism"
+        "Admin users see all management features including update capabilities",
+        "Non-admin users (Teacher, Staff) see read-only views without update controls",
+        "Role checks use the user profile role field already stored in the backend",
+        "Navigation and page layouts adapt based on user role",
+        "Unauthorized access attempts to admin routes redirect to appropriate pages"
       ]
     }
   ],
   "constraints": [
-    "All backend logic must be implemented in a single Motoko actor",
-    "Use React with TypeScript for frontend",
-    "Use Tailwind CSS for styling",
-    "Follow single-actor architecture pattern"
+    "Use existing role-based access control from user profiles (Administrator, Teacher, Staff roles)",
+    "Preserve existing student records, marks, and attendance data structures",
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts or other immutable paths",
+    "Maintain single-actor architecture in backend/main.mo"
   ],
   "nonGoals": [
-    "Fee payment tracking or billing",
-    "Teacher management or staff accounts",
-    "Advanced analytics or reporting dashboards",
-    "Parent portal or communication features",
-    "Automated grade calculation or GPA systems"
+    "Multi-day or bulk attendance marking interfaces",
+    "Advanced reporting or analytics features",
+    "Email or notification systems for attendance/marks updates",
+    "Student or parent portal access",
+    "Grade calculation or GPA computation features"
   ],
   "imageRequirements": {
-    "required": [
-      "Educational coaching center logo with books and graduation cap motif (logo.dim_200x200.png)",
-      "Hero banner image showing students studying in a coaching environment (hero-banner.dim_1200x400.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

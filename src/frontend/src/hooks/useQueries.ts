@@ -42,6 +42,20 @@ export function useSaveCallerUserProfile() {
   });
 }
 
+export function useIsCallerAdmin() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<boolean>({
+    queryKey: ['isAdmin'],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.isCallerAdmin();
+    },
+    enabled: !!actor && !actorFetching,
+    retry: false,
+  });
+}
+
 export function useGetStudent() {
   const { actor, isFetching } = useActor();
 
@@ -68,6 +82,58 @@ export function useAddStudent() {
     },
     onError: (error: Error) => {
       toast.error(`Failed to add student: ${error.message}`);
+    },
+  });
+}
+
+export function useGetAllSubjects() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<string[]>({
+    queryKey: ['subjects'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllSubjects();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useAddSubject() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (subjectName: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.addSubject(subjectName);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subjects'] });
+      toast.success('Subject added successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to add subject: ${error.message}`);
+    },
+  });
+}
+
+export function useEditSubject() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: { oldSubject: string; newSubject: string }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.editSubject(data.oldSubject, data.newSubject);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subjects'] });
+      queryClient.invalidateQueries({ queryKey: ['marks'] });
+      toast.success('Subject updated successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to update subject: ${error.message}`);
     },
   });
 }

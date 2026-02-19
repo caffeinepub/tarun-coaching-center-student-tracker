@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import StudentsPage from './pages/StudentsPage';
 import MarksPage from './pages/MarksPage';
 import AttendancePage from './pages/AttendancePage';
+import SubjectsPage from './pages/SubjectsPage';
 import ProfileSetupModal from './components/ProfileSetupModal';
 import LoginPage from './pages/LoginPage';
 import { Toaster } from '@/components/ui/sonner';
@@ -47,13 +48,26 @@ const attendanceRoute = createRoute({
   component: AttendancePage,
 });
 
+const subjectsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/subjects',
+  component: SubjectsPage,
+});
+
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/login',
   component: LoginPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, studentsRoute, marksRoute, attendanceRoute, loginRoute]);
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  studentsRoute,
+  marksRoute,
+  attendanceRoute,
+  subjectsRoute,
+  loginRoute,
+]);
 
 const router = createRouter({ routeTree });
 

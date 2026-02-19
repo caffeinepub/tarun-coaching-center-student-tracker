@@ -3,13 +3,15 @@ import List "mo:core/List";
 import Runtime "mo:core/Runtime";
 import Order "mo:core/Order";
 import Array "mo:core/Array";
-import Text "mo:core/Text";
 import Iter "mo:core/Iter";
+import Text "mo:core/Text";
 import Principal "mo:core/Principal";
 import Nat "mo:core/Nat";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -105,6 +107,9 @@ actor {
   let marks = List.empty<Mark>();
   let attendance = List.empty<AttendanceRecord>();
 
+  // New subject management state
+  let subjects = Map.empty<Text, Bool>();
+
   // Admin-only: Add student
   public shared ({ caller }) func addStudent(name : Text, rollNumber : Text, grade : Text, contact : Text) : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
@@ -136,10 +141,46 @@ actor {
     };
   };
 
+  // Admin-only: Manage subjects (add, edit)
+  public shared ({ caller }) func addSubject(subjectName : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can add subjects");
+    };
+    if (subjects.containsKey(subjectName)) {
+      Runtime.trap("Subject already exists");
+    };
+    subjects.add(subjectName, true);
+  };
+
+  public shared ({ caller }) func editSubject(oldSubject : Text, newSubject : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can edit subjects");
+    };
+    if (not subjects.containsKey(oldSubject)) {
+      Runtime.trap("Subject does not exist");
+    };
+    subjects.remove(oldSubject);
+    subjects.add(newSubject, true);
+  };
+
+  // Query all subjects (user-only)
+  public query ({ caller }) func getAllSubjects() : async [Text] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view subjects");
+    };
+    subjects.keys().toArray();
+  };
+
   // Admin-only: Add marks
   public shared ({ caller }) func addMark(studentId : Nat, subject : Text, examType : Text, score : Nat) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can perform this action");
+    };
+    if (not subjects.containsKey(subject)) {
+      Runtime.trap("Subject does not exist");
+    };
+    if (score > 100) {
+      Runtime.trap("Score cannot exceed 100 points");
     };
     let mark : Mark = {
       studentId;

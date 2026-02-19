@@ -37,7 +37,10 @@ export enum UserRole {
 export interface backendInterface {
     addMark(studentId: bigint, subject: string, examType: string, score: bigint): Promise<void>;
     addStudent(name: string, rollNumber: string, grade: string, contact: string): Promise<bigint>;
+    addSubject(subjectName: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    editSubject(oldSubject: string, newSubject: string): Promise<void>;
+    getAllSubjects(): Promise<Array<string>>;
     getAttendanceByDate(date: string): Promise<Array<AttendanceRecord>>;
     getAttendanceByStudent(studentId: bigint): Promise<Array<AttendanceRecord>>;
     getCallerUserProfile(): Promise<UserProfile | null>;

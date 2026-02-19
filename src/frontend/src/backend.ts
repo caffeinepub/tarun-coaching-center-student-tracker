@@ -120,7 +120,10 @@ export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addMark(studentId: bigint, subject: string, examType: string, score: bigint): Promise<void>;
     addStudent(name: string, rollNumber: string, grade: string, contact: string): Promise<bigint>;
+    addSubject(subjectName: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    editSubject(oldSubject: string, newSubject: string): Promise<void>;
+    getAllSubjects(): Promise<Array<string>>;
     getAttendanceByDate(date: string): Promise<Array<AttendanceRecord>>;
     getAttendanceByStudent(studentId: bigint): Promise<Array<AttendanceRecord>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
@@ -177,6 +180,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async addSubject(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addSubject(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addSubject(arg0);
+            return result;
+        }
+    }
     async assignCallerUserRole(arg0: Principal, arg1: UserRole): Promise<void> {
         if (this.processError) {
             try {
@@ -188,6 +205,34 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async editSubject(arg0: string, arg1: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.editSubject(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.editSubject(arg0, arg1);
+            return result;
+        }
+    }
+    async getAllSubjects(): Promise<Array<string>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllSubjects();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllSubjects();
             return result;
         }
     }

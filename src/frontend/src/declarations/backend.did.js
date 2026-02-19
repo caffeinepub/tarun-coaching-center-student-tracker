@@ -41,7 +41,10 @@ export const idlService = IDL.Service({
       [IDL.Nat],
       [],
     ),
+  'addSubject' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'editSubject' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'getAllSubjects' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
   'getAttendanceByDate' : IDL.Func(
       [IDL.Text],
       [IDL.Vec(AttendanceRecord)],
@@ -102,7 +105,10 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Nat],
         [],
       ),
+    'addSubject' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'editSubject' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'getAllSubjects' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
     'getAttendanceByDate' : IDL.Func(
         [IDL.Text],
         [IDL.Vec(AttendanceRecord)],

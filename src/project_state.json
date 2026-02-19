@@ -1,14 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
+  "projectStateVersion": 5,
   "summary": "Student marks and attendance tracking application for Tarun Coaching Center",
   "architectural_notes": [
     "Application designed for Tarun Coaching Center",
-    "Core functionality: marks and attendance tracking"
+    "Core functionality: marks and attendance tracking",
+    "Admin-only access controls for marks and attendance updates",
+    "Daily update capability for marks and attendance records",
+    "Test subject management system for organizing marks by subject"
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Educational coaching center logo with books and graduation cap motif (logo.dim_200x200.png)\n- Hero banner image showing students studying in a coaching environment (hero-banner.dim_1200x400.png)",
   "existing_features": [
     {
       "id": "feature-create-a-frontend-interface-to-add-view-edit-and-delete-student-records",
@@ -39,6 +41,38 @@
       "title": "Design a professional, education-focused visual theme with warm, welcoming colors and clear typography that reflects an academic coaching environment",
       "reqIds": [
         "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-marks-recording-interface-to-support-daily-updates-by-admin-users-allowing-selection-from-managed-test-subjects-and-updating-existing-mark-entries",
+      "title": "Enhance the marks recording interface to support daily updates by admin users, allowing selection from managed test subjects and updating existing mark entries",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-interface-for-test-subject-management-allowing-admins-to-add-new-subjects-and-edit-existing-subject-names",
+      "title": "Create an admin interface for test subject management allowing admins to add new subjects and edit existing subject names",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-attendance-interface-to-support-daily-updates-by-admin-users-allowing-them-to-mark-or-update-attendance-for-multiple-students-efficiently",
+      "title": "Enhance the attendance interface to support daily updates by admin users, allowing them to mark or update attendance for multiple students efficiently",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-role-based-ui-rendering-that-shows-or-hides-admin-only-features-marks-updates-test-subject-management-attendance-updates-based-on-the-authenticated-user-s-role-from-their-profile",
+      "title": "Implement role-based UI rendering that shows or hides admin-only features (marks updates, test subject management, attendance updates) based on the authenticated user's role from their profile",
+      "reqIds": [
+        "REQ-13"
       ],
       "version": 1
     }
@@ -83,6 +117,46 @@
       "summary": "Implement backend functionality to track daily attendance records for students",
       "reqIds": [
         "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Implement admin authentication and authorization system",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Create admin interface to update student marks daily for different test subjects",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Implement test subject management functionality (add, edit, delete subjects)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Create admin interface to update student attendance daily",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Implement admin role verification in the backend to restrict mark updates, test subject management, and attendance updates to users with admin privileges only",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Create backend functionality to manage test subjects including adding new subjects, editing subject names, and retrieving all available subjects",
+      "reqIds": [
+        "REQ-9"
       ],
       "status": "pending"
     }

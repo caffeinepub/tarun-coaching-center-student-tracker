@@ -1,14 +1,15 @@
 import { Link, useLocation } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetCallerUserProfile } from '../hooks/useQueries';
+import { useAuth } from '../hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Users, ClipboardList, Calendar, LogOut, Menu, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { BookOpen, Users, ClipboardList, Calendar, LogOut, Menu, X, BookMarked } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { identity, clear, isLoggingIn } = useInternetIdentity();
-  const { data: userProfile } = useGetCallerUserProfile();
+  const { isAdmin, userProfile } = useAuth();
   const queryClient = useQueryClient();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,14 +22,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   const navItems = [
-    { path: '/', label: 'Home', icon: BookOpen },
-    { path: '/students', label: 'Students', icon: Users },
-    { path: '/marks', label: 'Marks', icon: ClipboardList },
-    { path: '/attendance', label: 'Attendance', icon: Calendar },
+    { path: '/', label: 'Home', icon: BookOpen, adminOnly: false },
+    { path: '/students', label: 'Students', icon: Users, adminOnly: false },
+    { path: '/marks', label: 'Marks', icon: ClipboardList, adminOnly: false },
+    { path: '/attendance', label: 'Attendance', icon: Calendar, adminOnly: false },
+    { path: '/subjects', label: 'Subjects', icon: BookMarked, adminOnly: true },
   ];
 
+  const visibleNavItems = navItems.filter((item) => !item.adminOnly || isAdmin);
+
   if (!isAuthenticated) {
-    return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">{children}</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        {children}
+      </div>
+    );
   }
 
   return (
@@ -37,7 +45,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/assets/generated/logo.dim_200x200.png" alt="Tarun Coaching Center" className="h-12 w-12 rounded-lg shadow-md" />
+              <img
+                src="/assets/generated/logo.dim_200x200.png"
+                alt="Tarun Coaching Center"
+                className="h-12 w-12 rounded-lg shadow-md"
+              />
               <div>
                 <h1 className="text-xl font-bold text-blue-900 dark:text-blue-100">Tarun Coaching Center</h1>
                 <p className="text-xs text-green-700 dark:text-green-400">Student Tracker</p>
@@ -45,7 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Link>
 
             <nav className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => {
+              {visibleNavItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
                 return (
@@ -68,7 +80,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="hidden md:flex items-center gap-4">
               {userProfile && (
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{userProfile.name}</p>
+                  <div className="flex items-center gap-2 justify-end">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{userProfile.name}</p>
+                    {isAdmin && (
+                      <Badge variant="default" className="bg-blue-600 text-white text-xs">
+                        Admin
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{userProfile.role}</p>
                 </div>
               )}
@@ -78,7 +97,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Button>
             </div>
 
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-gray-700 dark:text-gray-300">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-gray-700 dark:text-gray-300"
+            >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -86,7 +108,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 pb-4 border-t border-blue-100 dark:border-gray-700 pt-4">
               <nav className="flex flex-col gap-2 mb-4">
-                {navItems.map((item) => {
+                {visibleNavItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path;
                   return (
@@ -108,7 +130,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </nav>
               {userProfile && (
                 <div className="px-4 py-2 bg-blue-50 dark:bg-gray-700 rounded-lg mb-2">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{userProfile.name}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{userProfile.name}</p>
+                    {isAdmin && (
+                      <Badge variant="default" className="bg-blue-600 text-white text-xs">
+                        Admin
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{userProfile.role}</p>
                 </div>
               )}
